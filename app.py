@@ -1,22 +1,24 @@
 from flask import Flask, render_template, request
-import tensorflow as tf
 import numpy as np
-import cv2
 import os
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from soil_properties import get_soil_properties_and_crops
 
 app = Flask(__name__)
 
-# ----------------------------------
-# MODEL PATH
-# ----------------------------------
-MODEL_PATH = "soil_mobilenet_model.h5"
+# ------------------------------
+# LOAD TFLITE MODEL
+# ------------------------------
+interpreter = tf.lite.Interpreter(model_path="soil_model.tflite")
+interpreter.allocate_tensors()
 
-# ----------------------------------
-# CLASS LABELS (final & only list)
-# MUST MATCH EXACT TRAINING FOLDER NAMES
-# ----------------------------------
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
+# ------------------------------
+# SOIL CLASSES (ORDER MUST MATCH TRAINING)
+# ------------------------------
 SOIL_CLASSES = [
     "Alluvial soil",
     "Black Soil",
@@ -24,23 +26,32 @@ SOIL_CLASSES = [
     "Red soil"
 ]
 
-# Load model
-model = tf.keras.models.load_model(MODEL_PATH)
+
+# ------------------------------
+# FUNCTION: Predict using TFLite
+# ------------------------------
+def predict_tflite(img_array):
+    interpreter.set_tensor(input_details[0]["index"], img_array)
+    interpreter.invoke()
+    preds = interpreter.get_tensor(output_details[0]["index"])
+    return preds
 
 
-# ----------------------------------
-# HOME ROUTE
-# ----------------------------------
+# ------------------------------
+# HOME PAGE
+# ------------------------------
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# ----------------------------------
+# ------------------------------
 # PREDICT ROUTE
-# ----------------------------------
+# ------------------------------
 @app.route("/predict", methods=["POST"])
 def predict():
+
+    # No file uploaded
     if "file" not in request.files:
         return render_template("unknown.html",
                                reason="No file selected",
@@ -53,49 +64,51 @@ def predict():
                                reason="Empty file uploaded",
                                confidence=0)
 
-    # Save uploaded file
+    # Save uploaded image
     save_path = os.path.join("static", "uploaded_img.jpg")
     file.save(save_path)
 
-    # Preprocess
+    # Preprocess the image
     img = load_img(save_path, target_size=(224, 224))
     img_array = img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
-    # Predict
-    preds = model.predict(img_array)
+    # TFLite Prediction
+    preds = predict_tflite(img_array)[0]
     confidence = float(np.max(preds) * 100)
-    predicted_idx = np.argmax(preds)
-    soil_type = SOIL_CLASSES[predicted_idx]
+    soil_type = SOIL_CLASSES[np.argmax(preds)]
 
-    # Unknown condition
-    if confidence < 60:
-        return render_template("unknown.html",
-                               reason="Low prediction confidence",
-                               confidence=round(confidence, 2))
+    # UNKNOWN soil handling
+    if confidence < 60:  # threshold
+        return render_template(
+            "unknown.html",
+            reason="Low prediction confidence",
+            confidence=round(confidence, 2)
+        )
 
-    # Get properties from CSV
+    # Read soil properties from CSV
     info = get_soil_properties_and_crops(soil_type)
 
     if info is None:
-        return render_template("unknown.html",
-                               reason="Soil type not found in CSV",
-                               confidence=round(confidence, 2))
+        return render_template(
+            "unknown.html",
+            reason="Soil type not found in CSV",
+            confidence=round(confidence, 2)
+        )
 
-    # Final result
-    return render_template("result.html",
-                           soil_type=soil_type,
-                           confidence=round(confidence, 2),
-                           avg=info["avg"],
-                           crops=info["crops"],
-                           image_path="static/uploaded_img.jpg")
+    # Final Result Page
+    return render_template(
+        "result.html",
+        soil_type=soil_type,
+        confidence=round(confidence, 2),
+        avg=info["avg"],
+        crops=info["crops"],
+        image_path="/static/uploaded_img.jpg"
+    )
 
 
-# ----------------------------------
-# RUN FLASK
-# ----------------------------------
+# ------------------------------
+# RUN APP
+# ------------------------------
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
+    app.run(debug=True)
