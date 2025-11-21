@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unknown Soil</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+<div class="result-container">
+    <div class="card">
+        <h2>❌ Unable to Analyze This Image</h2>
+
+        <p>Your image does not match any trained soil type.</p>
+
+        <p><b>Reason:</b> {{ reason }}</p>
+        <p><b>Confidence:</b> {{ confidence }}%</p>
+
+        <br>
+
+        <h3>Supported Soil Types:</h3>
+        <ul style="text-align:left;">
+            <li>Alluvial soil</li>
+            <li>Black Soil</li>
+            <li>Clay soil</li>
+            <li>Red soil</li>
+        </ul>
+
+        <a href="/" class="back-btn">🔙 Try Another Image</a>
+    </div>
+</div>
+</body>
+</html>

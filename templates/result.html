@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Result</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="result-container">
+
+    <div class="card">
+        <h2>🌍 Detected Soil Type: <span class="highlight">{{ soil_type }}</span></h2>
+        <p class="confidence">Confidence: {{ confidence }}%</p>
+
+        <img src="/{{ image_path }}" class="soil-img">
+    </div>
+
+    <div class="card">
+        <h3>📌 Soil Properties</h3>
+        
+        <ul class="properties">
+            {% for key, val in avg.items() %}
+            <li><b>{{ key }}:</b> {{ val }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>🌾 Recommended Crops</h3>
+        <ul class="crop-list">
+            {% for crop in crops %}
+            <li>{{ crop }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a class="back-btn" href="/">🔙 Upload Another</a>
+
+</div>
+
+</body>
+</html>

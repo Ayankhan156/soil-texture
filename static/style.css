@@ -1,0 +1,195 @@
+/* Enhanced and Animated CSS */
+
+/* --- Keyframes for subtle background animation --- */
+@keyframes backgroundShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    /* Updated background for better animation */
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    background-size: 400% 400%; /* Important for backgroundShift animation */
+    animation: backgroundShift 15s ease infinite; /* Apply the animation */
+    color: white;
+    text-align: center;
+    min-height: 100vh; /* Ensure full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center content vertically */
+}
+
+.container {
+    padding: 20px;
+    margin-top: 0; /* Centered with align-items */
+    max-width: 90%;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 5px;
+    /* Add a subtle shadow for depth */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    /* Animation for a dramatic entrance */
+    animation: fadeInDown 1s ease-out;
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    /* Subtle text fade-in */
+    animation: fadeIn 1.5s ease-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0.9;
+    }
+}
+
+#fileInput {
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#fileInput:hover {
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+#previewBox {
+    margin-top: 30px;
+    /* Animation for delayed appearance */
+    animation: fadeInScale 1.2s ease-out 0.5s forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+#previewImage {
+    width: 280px; /* Slightly larger image */
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px; /* More rounded corners */
+    display: block;
+    margin: 20px auto 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+    border: 3px solid #07c160; /* Highlight border */
+}
+
+#predictBtn {
+    margin-top: 30px;
+    padding: 14px 30px;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #07c160, #048842); /* Gradient for a modern look */
+    border: none;
+    color: white;
+    font-size: 19px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(7, 193, 96, 0.4);
+    transition: all 0.3s ease; /* Smooth transition for all changes */
+}
+
+#predictBtn:hover {
+    background: linear-gradient(45deg, #048842, #07c160); /* Invert gradient on hover */
+    transform: translateY(-3px) scale(1.02); /* Lift and slight scale effect */
+    box-shadow: 0 12px 30px rgba(7, 193, 96, 0.6);
+}
+
+#predictBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px rgba(7, 193, 96, 0.4);
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.15); /* Slightly less transparency */
+    padding: 25px; /* More padding */
+    border-radius: 20px;
+    margin: 30px auto;
+    max-width: 450px;
+    backdrop-filter: blur(12px); /* Stronger blur */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for definition */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    /* Animation to slide up on load */
+    animation: fadeInUp 1s ease-out 0.7s forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.soil-img {
+    width: 280px;
+    max-width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 25px;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #00a8ff, #0077c9); /* Blue gradient */
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+}
+
+.back-btn:hover {
+    background: linear-gradient(45deg, #0077c9, #00a8ff);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 168, 255, 0.6);
+}

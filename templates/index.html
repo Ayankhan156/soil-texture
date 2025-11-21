@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Detection</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/spinner.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🌱 Soil Texture Recognition</h1>
+    <p class="subtitle">Upload a soil image to detect its type & properties</p>
+
+    <form id="uploadForm" action="/predict" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" required>
+        
+        <div id="previewBox">
+            <img id="previewImage" src="" alt="">
+        </div>
+
+        <button type="submit" id="predictBtn">Analyze Soil</button>
+    </form>
+
+    <div id="loader" class="spinner hidden"></div>
+</div>
+
+<script>
+   document.getElementById("fileInput").addEventListener("change", function(event){
+    let img = document.getElementById("previewImage");
+    img.src = URL.createObjectURL(event.target.files[0]);
+
+    // Hide the choose file button
+    document.getElementById("fileInput").style.display = "none";
+
+    // Add animation or fade-in preview
+    img.style.opacity = "1";
+});
+
+
+    document.getElementById("uploadForm").addEventListener("submit", () => {
+        document.getElementById("loader").classList.remove("hidden");
+    });
+</script>
+
+</body>
+</html>
